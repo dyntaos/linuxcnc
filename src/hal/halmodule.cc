@@ -802,9 +802,9 @@ PyObject *component_exists(PyObject *self, PyObject *args) {
     char *name;
     if(!PyArg_ParseTuple(args, "s", &name)) return NULL;
     if(!SHMPTR(0)) {
-	PyErr_Format(PyExc_RuntimeError,
-		"Cannot call before creating component");
-	return NULL;
+        PyErr_Format(PyExc_RuntimeError,
+            "Cannot call before creating component");
+        return NULL;
     }
 
     return PyBool_FromLong(halpr_find_comp_by_name(name) != NULL);
@@ -812,6 +812,7 @@ PyObject *component_exists(PyObject *self, PyObject *args) {
 
 PyObject *component_is_ready(PyObject *self, PyObject *args) {
     char *name;
+    hal_comp_t *comp;
     if(!PyArg_ParseTuple(args, "s", &name)) return NULL;
     if(!SHMPTR(0)) {
 	PyErr_Format(PyExc_RuntimeError,
@@ -819,7 +820,8 @@ PyObject *component_is_ready(PyObject *self, PyObject *args) {
 	return NULL;
     }
 
-    return PyBool_FromLong(halpr_find_comp_by_name(name)->ready != 0);
+    comp = halpr_find_comp_by_name(name);
+    return PyBool_FromLong(comp != NULL && comp->ready != 0);
 }
 
 PyObject *new_sig(PyObject *self, PyObject *args) {
